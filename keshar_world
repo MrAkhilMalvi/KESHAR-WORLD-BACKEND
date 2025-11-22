@@ -1,0 +1,21 @@
+✅ 1. Create Table-Wise Sequences
+
+courses sequence
+
+CREATE SEQUENCE seq_courses START 1;
+
+course_modules sequence
+
+CREATE SEQUENCE seq_modules START 1;
+
+videos sequence
+
+CREATE SEQUENCE seq_videos START 1;
+
+orders sequence
+
+CREATE SEQUENCE seq_orders START 1;
+
+user_courses sequence 
+
+CREATE SEQUENCE seq_user_courses START 1;

@@ -1,0 +1,15 @@
+import express from "express";
+import loginRoutes from "./login.js";
+import otpRoutes from "./otp-email.js";
+import googleRoutes from "./google.js";
+import coursesRoutes from "./courses.js";
+const router = express.Router();
+
+router.get("/health-check", (req, res) => res.send("OK"));
+router.use('/auth', loginRoutes);
+router.use('/otp-email', otpRoutes);
+router.use("/auth", googleRoutes);  
+router.use("/courses", coursesRoutes);  
+router.use("/google", googleRoutes);
+
+export  default router;
