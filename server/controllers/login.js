@@ -211,10 +211,13 @@ if (!password) {
     // Step 3: Remove password before sending response
     delete user.password;
 
+    const jwtToken = auth.createToken(result.rows[0]);
+
     return res.status(200).json({
       status: true,
       message: "Login successful",
       data: user,
+      token : jwtToken
     });
 
   } catch (error) {

@@ -4,9 +4,9 @@ import auth from "../helpers/auth.js";
 
 const coures = express.Router();
 
-coures.route("/allcoures").get(auth.verifyToken,couresCtrl.getAllCourses);
+coures.route("/allcourses").get(auth.verifyToken,couresCtrl.getAllCourses);//auth.verifyToken,
 
-
+coures.route("/free_courses").post(auth.verifyToken,couresCtrl.enrollFreeCourse)
 
 
 export default coures;
