@@ -19,6 +19,9 @@ pids/
 *.seed
 *.pid.lock
 
+
+config/development.json
+config/default.json
 # Runtime data
 tmp/
 temp/

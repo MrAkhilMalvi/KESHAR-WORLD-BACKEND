@@ -21,6 +21,9 @@ console.log(process.env.DB_HOST);
 const app = express();
 const isDev = process.env.NODE_ENV !== "production";
 
+// Stripe webhook must use raw body
+//app.use("/api/stripe/webhook", express.raw({ type: "application/json" }));
+
 /* Logging in dev mode */
 if (isDev) {
   app.use(morgan("dev"));
@@ -127,7 +130,7 @@ app.use((err, req, res, next) => {
 
 /* 404 Handler — should come after routes */
 app.use((req, res, next) => {
-  next(new APIError("API not found", httpStatus.NOT_FOUND));
+  next(new APIError("API not found", httpStatus.NOT_FOUND,true));
 });
 
 /* Error logger — logs errors that reach this middleware (works in prod) */

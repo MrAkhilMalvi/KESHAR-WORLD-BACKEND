@@ -8,7 +8,7 @@ const payment = express.Router();
 payment.post("/create-checkout-session", paymentCtrl.createCheckoutSession);
 
 // Webhook (RAW BODY REQUIRED)
-payment.route("/webhook").post(express.raw({ type: "application/json" }),paymentCtrl.stripeWebhook);
+payment.route("/stripe/webhook").post(express.raw({ type: "application/json" }),paymentCtrl.stripeWebhook);
 
 
 export default payment;

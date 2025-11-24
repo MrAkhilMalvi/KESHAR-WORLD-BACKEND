@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET);
 
         const session = await stripe.checkout.sessions.create({
             mode: "payment",
-            payment_method_types: ["card", "upi", "netbanking"],
+            payment_method_types: ["card"], 
 
             line_items: [{
                 price_data: {
@@ -21,8 +21,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET);
                 quantity: 1
             }],
 
-            success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+            success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.CLIENT_URL}/cancel`,
 
             metadata: { user_id, course_id }
         });
