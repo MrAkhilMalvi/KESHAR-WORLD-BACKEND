@@ -38,14 +38,11 @@ async function getAllCourses( req , res , next){
             return res.status(400).json({ error: "Course is NOT free!" });
         }
 
-        await pgClient.query(
-            `INSERT INTO user_courses (user_id, course_id, access_end)
-             VALUES ($1, $2, NULL)
-             ON CONFLICT (user_id, course_id) DO NOTHING`,
-            [user_id, course_id]
+        const result = await pgClient.query("SELECT * FROM user_purchase_course($1,$2,$3,$4)",
+            [user_id, course_id,null,null]
         );
 
-        res.json({ success: true, message: "Free course enrolled!" });
+        res.json({ success: true, message: result.rows[0] });
 
     } catch (err) {
         console.error(err);

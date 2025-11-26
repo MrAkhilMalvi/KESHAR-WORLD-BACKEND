@@ -58,27 +58,30 @@ const stripe = new Stripe(process.env.STRIPE_SECRET);
         const userId = session.metadata.user_id;
         const courseId = session.metadata.course_id;
 
-        // create order
-        await pgClient.query(
-            `INSERT INTO orders (user_id, course_id, payment_id, amount, status)
-             VALUES ($1, $2, $3, $4, $5)`,
-            [
-                userId,
-                courseId,
-                session.payment_intent,
-                session.amount_total ,
-                "success"
-            ]
-        );
+        const result = await pgClient.query("SELECT * FROM user_purchase_course ($1,$2,$3,$4)",
+            [userId,courseId, session.payment_intent,session.payment_status]);
 
-        // give access for 1 year
-        await pgClient.query(
-            `INSERT INTO user_courses (user_id, course_id, access_end)
-             VALUES ($1, $2, NOW() + INTERVAL '365 days')
-             ON CONFLICT (user_id, course_id)
-             DO UPDATE SET access_end = EXCLUDED.access_end`,
-            [userId, courseId]
-        );
+        // // create order
+        // await pgClient.query(
+        //     `INSERT INTO orders (user_id, course_id, payment_id, amount, status)
+        //      VALUES ($1, $2, $3, $4, $5)`,
+        //     [
+        //         userId,
+        //         courseId,
+        //         session.payment_intent,
+        //         session.amount_total ,
+        //         "success"
+        //     ]
+        // );
+
+        // // give access for 1 year
+        // await pgClient.query(
+        //     `INSERT INTO user_courses (user_id, course_id, access_end)
+        //      VALUES ($1, $2, NOW() + INTERVAL '365 days')
+        //      ON CONFLICT (user_id, course_id)
+        //      DO UPDATE SET access_end = EXCLUDED.access_end`,
+        //     [userId, courseId]
+        // );
 
         console.log("Payment success → access given!");
     }

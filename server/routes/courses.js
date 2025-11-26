@@ -6,7 +6,7 @@ const coures = express.Router();
 
 coures.route("/allcourses").get(auth.verifyToken,couresCtrl.getAllCourses);//auth.verifyToken,
 
-coures.route("/free_courses").post(auth.verifyToken,couresCtrl.enrollFreeCourse)
+coures.route("/free_courses").post(couresCtrl.enrollFreeCourse)
 
 
 export default coures;

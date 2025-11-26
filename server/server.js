@@ -15,6 +15,7 @@ import winstonInstance from "./winston.js";
 import routes from "./routes/index.js";
 import { isCelebrateError } from "celebrate";
 import APIError from "./helpers/APIError.js";
+import stripewebhook from "./controllers/payment.js"
 import dotenv from "dotenv";
 dotenv.config();
 console.log(process.env.DB_HOST);    
@@ -22,7 +23,6 @@ const app = express();
 const isDev = process.env.NODE_ENV !== "production";
 
 // Stripe webhook must use raw body
-//app.use("/api/stripe/webhook", express.raw({ type: "application/json" }));
 
 /* Logging in dev mode */
 if (isDev) {
@@ -46,7 +46,12 @@ app.use(
 if (!isDev) {
   app.set("trust proxy", 1);
 }
-
+// 1️⃣ Stripe webhook should be at top BEFORE any body parser
+app.post(
+  "api/payment/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  stripewebhook.stripeWebhook
+);
 /* Built-in Express body parsing (Express 5) */
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));

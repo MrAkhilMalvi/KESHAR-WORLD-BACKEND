@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import config from "config";
 import APIError from "../helpers/APIError.js";
 
-const jwtSecret = config.get("App.config.jwtSecret");
+// const jwtSecret = config.get("App.config.jwtSecret");
 
 
 // ----------------------------
@@ -17,7 +17,8 @@ const jwtSecret = config.get("App.config.jwtSecret");
         mobileno: result.user_mobile,
         google_id :result.user_google_id
   }, // jwtSecret,     // PRODUCTION
-    process.env.JWT_SECRET || config.get("App.config.jwtSecret"),
+    process.env.JWT_SECRET ,
+    // || config.get("App.config.jwtSecret"),
     { expiresIn: "7d" }
   );
 };
@@ -36,7 +37,8 @@ const jwtSecret = config.get("App.config.jwtSecret");
 
   jwt.verify(
     token,
-    process.env.JWT_SECRET || config.get("App.config.jwtSecret"),
+    process.env.JWT_SECRET ,
+    // || config.get("App.config.jwtSecret"),
     (err, decoded) => {
       if (err) {
         return next(
