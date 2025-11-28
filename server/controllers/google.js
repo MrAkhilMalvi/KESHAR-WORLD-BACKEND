@@ -3,10 +3,10 @@ import pgClient from "../../config/db.js";
 import auth from "../helpers/auth.js";
 import  otpEmail  from "./otp-email.js";
 
- async function setPassword(req, res) {
+ async function setPassword(req, res,next) {
   try {
     const { password } = req.body;
-    const userId = 'STU000003'//req.user.id;
+    const userId = req.user.id;
 
 if (!password) {
   return res.status(400).json({ success: false, message: "Password required" });
@@ -27,6 +27,24 @@ res.json({ success: true, message: "Password updated successfully" });
   } catch (err) {
     console.log("SET-PASSWORD ERROR:", err);
     res.status(500).json({ success: false, message: "Error setting password" });
+  }
+}
+
+
+async function getPassword(req, res,next) {
+  try {
+
+    const userId = req.user.id;
+
+const result = await pgClient.query(
+  "select * from user_password_status($1)",
+  [userId]
+);
+
+res.json({ success: true, password_status: result.rows[0] });
+  } catch (err) {
+   
+    res.status(500).json({ success: false, message: err.message });
   }
 }
 
@@ -52,4 +70,4 @@ try {
 }
 }
 
-export default {setPassword,callback};
+export default {setPassword,callback,getPassword};
