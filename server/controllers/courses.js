@@ -10,7 +10,7 @@ async function getAllCourses( req , res , next){
     try {
           const id = req.user.id ;
       
-      const result = await pgClient.query("SELECT * FROM fn_user_course_status ($1)", [id]);
+      const result = await pgClient.query("SELECT * FROM student_course_status ($1)", [id]);
   
       if (!result.rows[0] === 0) {
         return next(new APIError("The coures are not exist", httpStatus.BAD_REQUEST, true,true));
