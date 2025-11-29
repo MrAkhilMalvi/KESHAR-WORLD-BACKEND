@@ -41,7 +41,12 @@ const result = await pgClient.query(
   [userId]
 );
 
-res.json({ success: true, password_status: result.rows[0] });
+const userData = await pgClient.query(
+  "select * from get_user_data($1)",
+  [userId]
+);
+
+res.json({ success: true, password_status: result.rows[0] , result : userData.rows[0] });
   } catch (err) {
    
     res.status(500).json({ success: false, message: err.message });
