@@ -50,4 +50,20 @@ async function getAllCourses( req , res , next){
     }
 }
 
-  export default {getAllCourses,enrollFreeCourse};
+async function student_purchase_AllCourses( req , res , next){
+  try {
+        const id = req.user.id ;
+    
+    const result = await pgClient.query("SELECT * FROM student_course_puchase_status($1)", [id]);
+
+    if (!result.rows[0] === 0) {
+      return next(new APIError("The coures are not exist", httpStatus.BAD_REQUEST, true,true));
+    }
+     
+      res.json({success:true, result : result.rows  });
+    
+  } catch (error) {
+    next(error);
+  }
+}
+  export default {getAllCourses,enrollFreeCourse,student_purchase_AllCourses};
