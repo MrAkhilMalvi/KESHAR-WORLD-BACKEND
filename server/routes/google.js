@@ -2,8 +2,6 @@ import express from "express";
 import passport from "../helpers/google.js";
 import  auth  from "../helpers/auth.js";
 import  googleCtrl  from "../controllers/google.js";
-import pgClient from "../../config/db.js";
-import auth from "../helpers/auth.js";
 
 const google = express.Router();
 
