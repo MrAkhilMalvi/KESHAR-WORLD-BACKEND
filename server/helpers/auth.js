@@ -34,7 +34,7 @@ import APIError from "../helpers/APIError.js";
   if (!token) {
     return next(new APIError("No token provided", httpStatus.UNAUTHORIZED, true, true));
   }
-
+  console.log("token",token)
   jwt.verify(
     token,
     process.env.JWT_SECRET ,
@@ -50,6 +50,7 @@ import APIError from "../helpers/APIError.js";
         );
       }
       req.user = decoded;
+      console.log("decoded",decoded)
       next();
     }
   );

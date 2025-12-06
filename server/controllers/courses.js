@@ -3,7 +3,8 @@ import  otpEmail  from "./otp-email.js";
 import redisClient from "../../config/redis.mjs";
 import httpStatus from "http-status";
 import APIError from "../helpers/APIError.js";
-
+import config from "config";
+const cloude = config.get("App.cloude");
 
 
 async function getAllCourses( req , res , next){
@@ -15,8 +16,16 @@ async function getAllCourses( req , res , next){
       if (!result.rows[0] === 0) {
         return next(new APIError("The coures are not exist", httpStatus.BAD_REQUEST, true,true));
       }
-       
-        res.json({success:true, result : result.rows  });
+      const finalData = result.rows.map(course => {
+        return {
+            ...course,
+            thumbnail_url: course.thumbnail_url 
+                ? `${cloude.PUBLIC_BUCKET_KEY}/${course.thumbnail_url}` 
+                : null
+        };
+    });
+
+        res.json({success:true, result :finalData  });
       
     } catch (error) {
       next(error);
@@ -54,7 +63,7 @@ async function student_purchase_AllCourses( req , res , next){
   try {
         const id = req.user.id ;
     
-    const result = await pgClient.query("SELECT * FROM student_course_puchase_status($1)", [id]);
+    const result = await pgClient.query("SELECT * FROM student_course_status($1)", [id]);
 
     if (!result.rows[0] === 0) {
       return next(new APIError("The coures are not exist", httpStatus.BAD_REQUEST, true,true));
