@@ -1,0 +1,2 @@
+"order_id","user_id","payment_intent","subtotal","gst_total","total_amount","products_json","created_at"
+"b27926e7-76f4-4aac-9551-6c75c3bd8587","STU000002","pi_3SbKzIRhHmAYQuNs0oCjhhhl","299","53.82","352.82","[{""id"": ""PRO000027"", ""qty"": 1, ""price"": ""299.00"", ""gst_amount"": ""53.8200000000000000"", ""gst_percent"": ""18"", ""amount_with_gst"": ""352.8200000000000000"", ""amount_before_gst"": ""299.00""}]","2025-12-06 12:53:27.320332"

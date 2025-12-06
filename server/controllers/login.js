@@ -113,7 +113,7 @@ async function verifyOtp(req, res, next) {
     const otpKey = `otp_${verify_type}`;
     const redisOtp = await redisClient.get(otpKey);
 
-    console.log("OTP in Redis:", redisOtp);
+    console.log("OTP in Redis:", typeof redisOtp, typeof otp);
 
     // ❌ redisOtp is null → OTP expired or not generated
     if (!redisOtp) {
@@ -122,9 +122,9 @@ async function verifyOtp(req, res, next) {
 
     // ❌ incorrect comparison before
     // ✔ correct comparison
-    // if (redisOtp !== otp) {
-    //   return next(new APIError("Invalid OTP", httpStatus.BAD_REQUEST, true, true));
-    // }
+    if (parseInt(redisOtp) !== otp) {
+      return next(new APIError("Invalid OTP", httpStatus.BAD_REQUEST, true, true));
+    }
 
     // Get signup stored data
     const dataKey = `signup_${verify_type}`;
@@ -136,12 +136,12 @@ async function verifyOtp(req, res, next) {
 
     const signupData = JSON.parse(signupDataJson);
 
-    console.log("Signup Data:", signupData.fullname);
+    console.log("Signup Data:", signupData);
 
     // TODO: INSERT USER  DATA TO DATABASE 
        const result = await pgClient.query(
-      "SELECT * FROM insert_user($1,$2,$3,$4)",
-      [signupData.fullname, signupData.email, signupData.mobile, signupData.password]
+      "SELECT * FROM insert_user($1,$2,$3,$4,$5)",
+      [signupData.fullname, signupData.email, signupData.mobile, signupData.password ,null]
     );
 
     if (!result) {
@@ -149,10 +149,10 @@ async function verifyOtp(req, res, next) {
     }
     await redisClient.del(otpKey);
     await redisClient.del(dataKey);
-  console.log("result",result)
+
      const jwtToken = auth.createToken(result);
-     console.log("jwtToken",jwtToken)
-     console.log("result",result)
+
+
     return res.json({
       success: true,
       message: "successfully LOGIN",
