@@ -34,9 +34,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:8080",
-      "http://192.168.0.67:3003",
+      "http://192.168.0.42:8001",
       "http://192.168.0.42:8080",
-      "http://localhost:5179",
+      "http://localhost:8081",
     ],
     credentials: true,
   })
@@ -48,7 +48,7 @@ if (!isDev) {
 }
 // 1️⃣ Stripe webhook should be at top BEFORE any body parser
 app.post(
-  "api/payment/stripe/webhook",
+  "/api/payment/stripe/webhook",
   express.raw({ type: "application/json" }),
   stripewebhook.stripeWebhook
 );

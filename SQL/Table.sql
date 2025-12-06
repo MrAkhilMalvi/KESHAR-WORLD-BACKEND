@@ -330,3 +330,106 @@ BEGIN
     ORDER BY position;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION public.student_course_purchase_status(
+	in_user_id character varying)
+    RETURNS TABLE(id character varying, title character varying, price numeric, description text, is_free boolean, instructor character varying, original_price numeric, badge character varying, category character varying, thumbnail_url character varying, order_status character varying, access_start timestamp without time zone, access_end timestamp without time zone, is_access_active boolean) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id,
+        c.title,
+        c.price,
+        c.description,
+        c.is_free,
+        c.instructor,
+        c.original_price,
+        c.badge,
+        c.category,
+        c.thumbnail_url,
+
+        COALESCE(o.status, 'not purchased') AS order_status,
+        uc.access_start,
+        uc.access_end,
+
+        (uc.access_end > NOW()) AS is_access_active
+        
+    FROM user_courses uc
+    INNER JOIN courses c ON c.id = uc.course_id
+    
+    LEFT JOIN LATERAL (
+        SELECT *
+        FROM orders
+        WHERE user_id = in_user_id
+          AND course_id = c.id
+        ORDER BY id DESC
+        LIMIT 1
+    ) o ON TRUE
+
+    WHERE uc.user_id = in_user_id   -- ONLY purchased courses
+    ORDER BY uc.access_end DESC;
+
+END;
+$BODY$;
+
+
+
+
+CREATE OR REPLACE FUNCTION public.student_courses_base_module(
+	in_user_id character varying,
+	in_course_id character varying)
+    RETURNS TABLE(module_id character varying, course_id character varying, module_title character varying, "position" integer, is_access_active boolean) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+DECLARE 
+    v_access_end timestamp;
+BEGIN
+    -- Check purchased access (safe match)
+    SELECT access_end
+    INTO v_access_end
+    FROM user_courses uc
+    WHERE uc.user_id = in_user_id
+      AND TRIM(LOWER(uc.course_id)) = TRIM(LOWER(in_course_id))
+    ORDER BY uc.access_end DESC
+    LIMIT 1;
+
+    -- Active access
+    IF v_access_end IS NOT NULL AND v_access_end > NOW() THEN
+        RETURN QUERY
+        SELECT 
+            m.id,
+            m.course_id,
+            m.module_title,
+            m.position,
+            TRUE
+        FROM course_modules m
+        ORDER BY m.position;
+
+        RETURN;
+    END IF;
+
+    -- Not purchased or expired
+    RETURN QUERY
+    SELECT 
+        m.id,
+        m.course_id,
+        m.module_title,
+        m.position,
+        FALSE
+    FROM course_modules m
+    ORDER BY m.position;
+
+END;
+$BODY$;

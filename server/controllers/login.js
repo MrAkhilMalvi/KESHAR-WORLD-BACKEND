@@ -149,9 +149,10 @@ async function verifyOtp(req, res, next) {
     }
     await redisClient.del(otpKey);
     await redisClient.del(dataKey);
-
+  console.log("result",result)
      const jwtToken = auth.createToken(result);
-
+     console.log("jwtToken",jwtToken)
+     console.log("result",result)
     return res.json({
       success: true,
       message: "successfully LOGIN",
@@ -211,8 +212,11 @@ if (!password) {
     // Step 3: Remove password before sending response
     delete user.password;
 
+    console.log("result",result.rows[0])
+
     const jwtToken = auth.createToken(result.rows[0]);
 
+console.log("jwtToken",jwtToken)
     return res.status(200).json({
       status: true,
       message: "Login successful",
