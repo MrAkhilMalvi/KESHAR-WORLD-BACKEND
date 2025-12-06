@@ -1,0 +1,2 @@
+"id","order_id","product_id","qty","price","gst_percent","gst_amount","amount_before_gst","amount_with_gst","created_at"
+1,"b27926e7-76f4-4aac-9551-6c75c3bd8587","PRO000027",1,"299.00","18","299.00","53.8200000000000000","352.8200000000000000","2025-12-06 12:53:27.310167"

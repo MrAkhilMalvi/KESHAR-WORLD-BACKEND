@@ -1,0 +1,3 @@
+"id","title","slug","description","category","sub_category","price","discount_price","is_free","quantity","thumbnail_url","language","create_at","update_at","gst_percent"
+"PRO000026","this is master react","this-is-master-react","this is master react","Updated Category","JavaScrip","599.00","499.00",False,"1","thumbnails/products/PRO000026/1765015271681_docker.png","English","2025-12-06 10:39:07.808971","2025-12-06 10:39:07.808971","18"
+"PRO000027","this is test","this-is-test","htis istest pvdfvnfkjfsn","Updated Category","JavaScript","299.00","999.00",False,"1","thumbnails/products/PRO000027/1765015300364_cycle.png","English","2025-12-06 12:55:32.809017","2025-12-06 12:55:32.809017","18"
